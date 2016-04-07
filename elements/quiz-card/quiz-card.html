@@ -1,0 +1,119 @@
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../card-behavior/card-behavior.html">
+<link rel="import" href="../animatable-fab/animatable-fab.html">
+<dom-module id="quiz-card">
+    <template>
+        <style include="card-styles"></style>
+        <style>
+        .header {
+            @apply(--paper-font-title);
+            z-index: 2;
+            white-space: pre-line !important;
+            overflow: visible;
+        }
+        
+        .answers {
+            padding: 24px 0;
+        }
+        
+        .answer {
+            min-height: 60px;
+            padding-left: 24px;
+            cursor: pointer;
+        }
+        
+        paper-item:focus:before {
+            opacity: 0;
+        }
+        
+        paper-item.iron-selected:before {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: currentColor;
+            content: '';
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        
+        animatable-fab {
+            position: absolute;
+            right: 24px;
+            bottom: -56px;
+        }
+        
+        @media screen and (max-width: 512px) {
+            .header {
+                font-size: 18px !important;
+                line-height: 24px !important;
+            }
+            .answer {
+                padding-left: 12px;
+                font-size: 15px;
+                line-height: 18px;
+            }
+            animatable-fab {
+                right: 12px;
+            }
+        }
+        </style>
+        <div class="card">
+            <div class="header">
+                <span>{{quiz.question}}</span>
+                <animatable-fab icon="forward" on-tap="_evalAnswer"></animatable-fab>
+            </div>
+            <div class="answers">
+                <paper-menu selected="{{selected}}" attr-for-selected="answer">
+                    <template is="dom-repeat" items="{{quiz.answers}}" sort="_randomize">
+                        <paper-item class="answer" answer="{{item}}" tab-index="-1">
+                            <paper-ripple></paper-ripple>
+                            <span>{{item}}</span>
+                        </paper-item>
+                    </template>
+                </paper-menu>
+            </div>
+        </div>
+    </template>
+    <script>
+    'use strict';
+    Polymer({
+        is: 'quiz-card',
+        behaviors: [OWASP.CardBehavior],
+        properties: {
+            quiz: {
+                type: Object,
+                observer: '_reset'
+            },
+            selected: {
+                value: false
+            },
+        },
+        listeners: {
+            'iron-select': '_onIronSelect',
+        },
+        _onIronSelect: function(e) {
+            e.stopPropagation();
+            this.$$('animatable-fab').show();
+        },
+        _randomize: function() {
+            return 0.5 - Math.random();
+        },
+        _evalAnswer: function() {
+            var index = this.quiz.answers.indexOf(this.selected);
+            this.set('quiz.givenAnswer', index);
+            this.fire('graded');
+        },
+        _stopEventBubbling: function(e) {
+            e.stopPropagation();
+        },
+        _reset: function() {
+            this.$$('animatable-fab').hide();
+            this.selected = false;
+        }
+    });
+    </script>
+</dom-module>

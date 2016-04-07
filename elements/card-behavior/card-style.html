@@ -1,0 +1,81 @@
+<dom-module id="card-styles">
+    <template>
+        <style>
+        :host {
+            display: block;
+            padding-top: 64px;
+            height: 100%;
+        }
+        
+        .card {
+            @apply(--shadow-elevation-4dp);
+            max-width: 512px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            @apply(--paper-font-body1);
+        }
+        
+        .header {
+            min-height: 160px;
+            background-color: var(--primary-color);
+            @apply(--layout-horizontal);
+            @apply(--layout-center);
+            color: white;
+            padding: 24px;
+            box-sizing: border-box;
+            @apply(--paper-font-display1);
+            white-space: pre-line !important;
+            position: relative;
+            overflow: visible;
+        }
+        
+        .card-body {
+            padding: 0 24px 40px;
+        }
+        
+        paper-button {
+            background-color: var(--accent-color);
+            @apply(--paper-font-subhead);
+            color: white;
+            width: 80%;
+            box-sizing: border-box;
+            padding: 16px;
+            margin: 48px auto;
+            display: block;
+        }
+
+        paper-button:hover{
+            background-color: var(--dark-accent-color);
+        }
+        
+        @media screen and (max-width: 512px) {
+            :host {
+                padding-top: 0 !important;
+            }
+            .card {
+                margin: 0;
+                min-height: 100vh;
+            }
+            .header {
+                padding: 18px 12px;
+            }
+            paper-button {
+                width: 100%;
+            }
+            .card-body {
+                padding: 0 16px 40px;
+            }
+        }
+        
+        a {
+            text-decoration: none;
+            color: var(--accent-color);
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        </style>
+    </template>
+</dom-module>

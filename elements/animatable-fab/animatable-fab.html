@@ -1,0 +1,72 @@
+<link rel="import" href="../../bower_components/neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<dom-module id="animatable-fab">
+    <template>
+    <style>
+    :host {
+        display: none;
+    }
+
+    paper-fab {
+        -webkit-transform: translateZ(0);
+    }
+     </style>
+        <paper-fab icon="{{icon}}" mini$="{{mini}}" src="{{src}}"></paper-fab>
+    </template>
+</dom-module>
+<script>
+'use strict';
+(function() {
+    Polymer({
+        is: 'animatable-fab',
+        behaviors: [
+            Polymer.NeonAnimationRunnerBehavior
+        ],
+        properties: {
+            icon: String,
+            mini: Boolean,
+            src: {
+                type: String,
+                // value:'/static/img/quiz-icons/rocket.png'
+            },
+            _visible: Boolean,
+            animationConfig: {
+                type: Object,
+                value: function() {
+                    return {
+                        'showFab': {
+                            name: 'scale-up-animation',
+                            node: this,
+                            timing: {
+                                delay: 200,
+                                duration:600
+                            }
+                        },
+                    };
+                }
+            },
+        },
+        listeners: {
+            'neon-animation-finish': '_onNeonAnimationFinish',
+        },
+        _onNeonAnimationFinish: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.$$('paper-fab').focus();
+        },
+        show: function() {
+            this.style.display = 'block';
+            if (!this._visible) {
+                //this.cancelAnimation();
+                this.playAnimation('showFab');
+            }
+            this._visible = true;
+        },
+        hide: function() {
+            this.style.display = 'none';
+            this._visible = false;
+        }
+    });
+})();
+</script>

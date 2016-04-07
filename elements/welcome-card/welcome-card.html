@@ -1,0 +1,58 @@
+<link rel="import" href="../card-behavior/card-behavior.html">
+<dom-module id="welcome-card">
+    <template>
+        <style include="card-styles"></style>
+        <style type="text/css">
+        :host {
+            padding-top: 24px;
+            overflow: scroll;
+            margin-bottom: 24px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .tweet {
+            padding-top: 24px;
+            text-align: center;
+        }
+
+        .card-body{
+            padding-top: 24px;
+        }
+        </style>
+        <div class="card">
+            <div class="header">Web Security Quiz</div>
+            <div class="card-body">
+                <p>
+                    How good is your Web Security knowledge?
+                    <br></p>
+                    In the following Quiz you can test yourself with Questions from the <a target="_blank" href="https://www.owasp.org/index.php/OWASP_Top_10_Threats_and_Mitigations_Exam_-_Single_Select">OWASP Top 10 Threats and Mitigations Exam.</a>
+                </p>
+                <p>
+                    To pass the quiz you need to get 70% of the answers correct. Seven Questions are picked randomly for every attempt.
+                </p>
+                <paper-button on-tap="_start">Start Quiz</paper-button>
+            </div>
+            <div class="card-body footer">
+                Raise awareness for Web Security by <a target="_blank" href="https://twitter.com/intent/tweet?text=Test%20your%20Web%20Security%20Knowledge:%20https://websecurity.firebaseapp.com%20by%20@capira42%20" target="_blank">tweeting about this quiz</a> or  
+                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A//websecurity.firebaseapp.com">share it on Facebook</a>.
+                <br>
+                <br>
+                <a target="_blank" href="http://robinlinus.com">Built with ♥ by Robin Linus</a>
+            </div>
+        </div>
+    </template>
+    <script>
+    'use strict';
+    Polymer({
+        is: 'welcome-card',
+        behaviors: [OWASP.CardBehavior],
+        _start: function() {
+            this.fire('start')
+        }
+    });
+    </script>
+</dom-module>

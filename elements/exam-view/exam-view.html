@@ -1,0 +1,140 @@
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../welcome-card/welcome-card.html">
+<link rel="import" href="../quiz-card/quiz-card.html">
+<link rel="import" href="../score-card/score-card.html">
+<dom-module id="exam-view">
+    <template>
+        <style>
+        :host {
+            display: block;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        neon-animated-pages {
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .stats-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        .stats-bar {
+            background: white;
+            width: 100%;
+            max-width: 512px;
+            margin: 0 auto;
+            @apply(--paper-font-title);
+            @apply(--shadow-elevation-4dp);
+        }
+        
+        .stats-bar div {
+            padding: 16px 24px;
+            box-sizing: border-box;
+            text-align: right;
+        }
+        
+        paper-progress {
+            position: absolute;
+            display: block;
+            bottom: 56px;
+            z-index: 1;
+            width: 100%;
+            max-width: 512px;
+            margin: 0 auto;
+            --paper-progress-active-color: var(--primary-color);
+            --paper-progress-container-color: #fff;
+            --paper-progress-transition-duration: 0.2s;
+        }
+        
+        @media screen and (max-width: 512px) {
+            .stats-bar div {
+                padding: 16px 12px;
+            }
+        }
+        
+        paper-icon-button {
+            float: left;
+            margin-top: -4px;
+            display: block;
+        }
+        </style>
+        <neon-animated-pages selected="{{selected}}" id="pages" animate-initial-selection>
+            <welcome-card on-start="start"></welcome-card>
+            <template is="dom-repeat" items="{{exam}}">
+                <quiz-card quiz="{{item}}"></quiz-card>
+            </template>
+            <score-card exam="{{exam}}"></score-card>
+        </neon-animated-pages>
+        <div class="stats-container" hidden$="{{!selected}}">
+            <div class="stats-bar">
+                <paper-progress value="{{progress}}" class="transiting">
+                </paper-progress>
+                <div>
+                    <paper-icon-button icon="home" on-tap="_home"></paper-icon-button>
+                    {{answeredAnswers}}/{{exam.length}}</div>
+            </div>
+        </div>
+    </template>
+    <script>
+    'use strict';
+    Polymer({
+        is: 'exam-view',
+        listeners: {
+            graded: '_next'
+        },
+        properties: {
+            exam: {
+                type: Array
+            },
+            answeredAnswers: {
+                value: 0
+            },
+            selected: {
+                value: 0
+            },
+            progress: {
+                computed: '_computeProgress(answeredAnswers)'
+            }
+        },
+        _randomize: function() {
+            return 0.5 - Math.random();
+        },
+        _next: function(e) {
+            this.answeredAnswers += 1;
+            var score = this.exam.reduce(function(a, e) {
+                return a + (e.correct === e.givenAnswer ? 1 : 0);
+            }, 0) / this.exam.length;
+            score = Math.round(score * 100);
+            this.set('exam.score', score);
+            this.$.pages.selectNext();
+            if (this.answeredAnswers === this.exam.length) {
+                this.set('exam.time', Math.round((Date.now() - this.exam.time) / 1000));
+            }
+        },
+        _computeProgress: function() {
+            if (!this.exam) {
+                return 0;
+            }
+            return 100 * this.answeredAnswers / this.exam.length
+        },
+        reset: function() {
+            this.$.pages.select(0);
+            this.answeredAnswers = 0;
+        },
+        start: function() {
+            this.$.pages.select(1);
+            this.exam.time = Date.now();
+        },
+        _home: function() {
+            app.reset();
+        }
+    });
+    </script>
+</dom-module>
