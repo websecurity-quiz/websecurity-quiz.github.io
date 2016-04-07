@@ -1,0 +1,43 @@
+<link rel="import" href="../../bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="card-style.html">
+<script>
+'use strict';
+var OWASP = window.OWASP || {}
+OWASP.CardBehaviorImpl = {
+    properties: {
+        animationConfig: {
+            value: function() {
+                var card = this.$$('.card')
+                return {
+                    'entry': [{
+                        name: 'slide-from-bottom-animation',
+                        node: card,
+                        timing: {
+                            delay: 200
+                        }
+                    }, {
+                        name: 'fade-in-animation',
+                        node: card,
+                        timing: {
+                            delay:200,
+                            duration: 200
+                        }
+                    }],
+                    'exit': [{
+                        name: 'slide-up-animation',
+                        node: card
+                    }, {
+                        name: 'fade-out-animation',
+                        node: card,
+                        timing: {
+                            delay: 100
+                        }
+                    }]
+                };
+            }
+        },
+    }
+}
+
+OWASP.CardBehavior = [Polymer.NeonAnimatableBehavior, OWASP.CardBehaviorImpl]
+</script>

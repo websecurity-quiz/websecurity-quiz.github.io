@@ -1,0 +1,147 @@
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../card-behavior/card-behavior.html">
+<dom-module id="score-card">
+    <template>
+        <style include="card-styles"></style>
+        <style>
+        :host {
+            overflow: scroll;
+            padding-top: 24px;
+        }
+        
+        .card {
+            margin-bottom: 24px;
+        }
+        
+        .quiz {
+            border-bottom: 1px solid var(--divider-color);
+            padding: 16px;
+        }
+        
+        .quiz iron-icon {
+            color: #e53935;
+            float: right;
+        }
+        
+        .quiz iron-icon[correct] {
+            color: #0b8043;
+        }
+        
+        .quiz b {
+            padding-top: 4px;
+            display: inline-block;
+        }
+        
+        .your-answer {
+            text-decoration: line-through;
+        }
+        
+        .score {
+            padding: 24px 16px 48px;
+            border-bottom: 1px solid var(--divider-color);
+            @apply(--paper-font-title);
+        }
+        
+        .passed,
+        .not-passed {
+            text-align: center;
+        }
+        
+        .passed {
+            color: #0b8043;
+        }
+        
+        .not-passed {
+            color: #ff5252;
+        }
+        
+        .score iron-icon {
+            margin-top: 8px;
+            width: 128px;
+            height: 128px;
+            float: none;
+        }
+        
+        paper-button {
+            margin-bottom: 72px;
+        }
+        
+        .tweet {
+            margin-bottom: 56px;
+            text-align: center;
+        }
+        </style>
+        <div class="card">
+            <div class="header">Scorecard</div>
+            <template is="dom-repeat" items="{{exam}}">
+                <div class="quiz">
+                    <div>
+                        <iron-icon icon="{{_answerIcon(item,item.givenAnswer)}}" correct$="{{_answerIsCorrect(item,item.givenAnswer)}}"></iron-icon>
+                        <span class="question">{{item.question}}</span>
+                    </div>
+                    <b>{{_correctAnswer(item)}}</b>
+                    <div class="your-answer" hidden$="{{_answerIsCorrect(item,item.givenAnswer)}}">{{_yourAnswer(item,item.givenAnswer)}}</div>
+                </div>
+            </template>
+            <div>
+                <div class="score">
+                    <div>Your Score: <span style="float:right">{{exam.score}}%</span></div>
+                    <div>Your Time: <span style="float:right">{{exam.time}}s</span></div>
+                    <div hidden$="{{!passed}}" class="passed">
+                        <iron-icon icon="social:mood"></iron-icon>
+                        <div>Congrats! You Passed!</div>
+                    </div>
+                    <div hidden$="{{passed}}" class="not-passed">
+                        <iron-icon icon="social:mood-bad"></iron-icon>
+                        <div>You did not pass! Try Again!</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <paper-button on-tap="reset">Give me another Quiz!</paper-button>
+                <p class="tweet">
+                    Raise awareness for Web Security by <a href="https://twitter.com/intent/tweet?text=Test%20your%20Web%20Security%20Knowledge:%20https://websecurity.firebaseapp.com%20by%20@capira42%20" target="_blank">tweeting about this Quiz.</a>
+                    <br>
+                    <br>
+                    <a target="_blank" href="http://robinlinus.com">Built with ♥ by Robin Linus</a>
+                </p>
+            </div>
+        </div>
+    </template>
+    <script>
+    'use strict';
+    Polymer({
+        is: 'score-card',
+        properties: {
+            exam: Object,
+            passed: {
+                computed: '_computePassed(exam.score)'
+            }
+        },
+        behaviors: [OWASP.CardBehavior],
+        _correctAnswer: function(quiz) {
+            return quiz.answers[quiz.correct];
+        },
+        _yourAnswer: function(quiz) {
+            return quiz.answers[quiz.givenAnswer];
+        },
+        _answerIcon: function(quiz) {
+            return quiz.correct === quiz.givenAnswer ? 'check' : 'close';
+        },
+        _answerIsCorrect: function(quiz) {
+            return quiz.correct === quiz.givenAnswer;
+        },
+        _computePassed: function(score) {
+            return score >= 70;
+        },
+        reset: function() {
+            //ripple animation is a little smoother, when we wait for it to finish
+            this.async(function() {
+                app.reset();
+                this.scrollTop = 0;
+            }, 50);
+        }
+    });
+    </script>
+</dom-module>

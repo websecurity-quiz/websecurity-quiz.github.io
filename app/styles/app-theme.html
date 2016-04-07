@@ -1,0 +1,49 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+<style is="custom-style">
+/* Application theme */
+
+:root {
+    --primary-text-color: var(--paper-grey-900);
+    --primary-background-color: #ffffff;
+    --secondary-text-color: #737373;
+    --disabled-text-color: #9b9b9b;
+    --divider-color: #dbdbdb;
+    --primary-color: var(--paper-teal-500);
+    --light-primary-color: var(--paper-green-a100);
+    --dark-primary-color: var(--paper-teal-700);
+    --accent-color: var(--paper-pink-a200);
+    --light-accent-color: var(--paper-pink-a100);
+    --dark-accent-color: var(--paper-pink-a400);
+    /* Components */
+    /* paper-drawer-panel */
+    --drawer-menu-color: #ffffff;
+    --drawer-border-color: 1px solid #ccc;
+    --drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
+    /* paper-menu */
+    --paper-menu-background-color: #fff;
+    --menu-link-color: #111111;
+}
+
+
+/* General styles */
+
+body {
+    @apply(--layout-fullbleed);
+    @apply(--layout-vertical);
+    background: var(--light-primary-color);
+}
+
+.logo {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    left: 50%;
+    top: 50%;
+    margin-top: -100px;
+    margin-left: -100px;
+    color: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+}
+</style>
