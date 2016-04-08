@@ -115,7 +115,10 @@
             this.set('exam.score', score);
             this.$.pages.selectNext();
             if (this.answeredAnswers === this.exam.length) {
-                this.set('exam.time', Math.round((Date.now() - this.exam.time) / 1000));
+
+                var totalTime = Math.round((Date.now() - this.exam.time) / 1000);
+                totalTime = Math.round(totalTime / 60) + 'm ' + (totalTime % 60) + 's';
+                this.set('exam.time', totalTime);
             }
         },
         _computeProgress: function() {
